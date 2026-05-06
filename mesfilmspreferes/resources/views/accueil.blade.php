@@ -2,10 +2,11 @@
 @section('title', 'Accueil')
 @section('styles')
 <style>
+/* HERO */
 .hero {
     position: relative;
     overflow: hidden;
-    padding: 90px 28px 80px;
+    padding: 100px 28px 88px;
     text-align: center;
     background: #080810;
     border-bottom: 1px solid var(--border);
@@ -14,37 +15,113 @@
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(229,9,20,0.1) 0%, transparent 70%);
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(229,9,20,0.09) 0%, transparent 70%);
     pointer-events: none;
 }
 .hero-eyebrow {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--red);
-    margin-bottom: 20px;
-    opacity: 0.85;
+    margin-bottom: 22px;
+    opacity: 0.8;
 }
 .hero h1 {
-    font-size: clamp(34px, 5vw, 62px);
+    font-size: clamp(36px, 5vw, 64px);
     font-weight: 800;
     color: #fff;
-    line-height: 1.06;
+    line-height: 1.05;
     letter-spacing: -0.03em;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 .hero h1 em { font-style: normal; color: var(--red); }
 .hero-sub {
-    font-size: 16px;
-    color: #50506a;
-    max-width: 440px;
-    margin: 0 auto 36px;
-    line-height: 1.65;
+    font-size: 15px;
+    color: #46465e;
+    max-width: 420px;
+    margin: 0 auto 38px;
+    line-height: 1.7;
     font-weight: 400;
 }
 .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* BANDEROLE NOUVEAUTÉS */
+.banner-strip {
+    background: #0e0e18;
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+.banner-strip-inner {
+    display: flex;
+    align-items: stretch;
+}
+.banner-label {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 22px;
+    background: var(--red);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+    z-index: 2;
+}
+.banner-scroll-wrap {
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+}
+.banner-scroll-wrap::-webkit-scrollbar { display: none; }
+.banner-scroll {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    padding: 14px 24px 14px 18px;
+}
+.banner-film-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 0 0;
+    margin-right: 20px;
+    border-right: 1px solid var(--border);
+    cursor: pointer;
+    transition: opacity var(--t);
+    text-decoration: none;
+}
+.banner-film-item:last-child { border-right: none; }
+.banner-film-item:hover { opacity: 0.75; }
+.banner-film-poster {
+    width: 28px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card-2);
+}
+.banner-film-info {}
+.banner-film-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.banner-film-date {
+    font-size: 10px;
+    color: #404058;
+    white-space: nowrap;
+}
 
 /* TOP FILMS SCROLL */
 .top-scroll-wrap {
@@ -65,7 +142,7 @@
     flex-shrink: 0;
     width: 140px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform var(--t);
 }
 .top-film-card:hover { transform: translateY(-4px); }
 .top-film-card img {
@@ -110,7 +187,6 @@
 .stats-row {
     display: flex;
     justify-content: center;
-    gap: 0;
     border: 1px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
@@ -119,38 +195,38 @@
 }
 .stat-item {
     flex: 1;
-    padding: 24px 16px;
+    padding: 22px 16px;
     text-align: center;
     border-right: 1px solid var(--border);
 }
 .stat-item:last-child { border-right: none; }
-.stat-num { font-size: 28px; font-weight: 800; color: #fff; line-height: 1; }
-.stat-label { font-size: 11px; color: #3a3a50; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.08em; }
+.stat-num { font-size: 26px; font-weight: 800; color: #fff; line-height: 1; }
+.stat-label { font-size: 10px; color: #333348; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.09em; }
 
 /* FEATURES */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
 }
 .feature-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 24px 22px;
+    padding: 22px 20px;
     text-decoration: none;
     display: block;
-    transition: border-color 0.18s, background 0.18s;
+    transition: border-color var(--t), background var(--t);
 }
 .feature-card:hover { border-color: var(--border-2); background: var(--bg-card-2); }
 .feature-icon {
-    font-size: 18px;
+    font-size: 17px;
     color: var(--red);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     display: block;
 }
-.feature-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
-.feature-desc { font-size: 12.5px; color: #4a4a62; line-height: 1.55; }
+.feature-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.feature-desc { font-size: 12px; color: #3e3e58; line-height: 1.55; }
 </style>
 @endsection
 @section('content')
@@ -171,12 +247,38 @@
     </div>
 </div>
 
+{{-- BANDEROLE NOUVEAUTÉS --}}
+@if(isset($nowPlaying) && count($nowPlaying) > 0)
+<div class="banner-strip">
+    <div class="banner-strip-inner">
+        <div class="banner-label"><i class="bi bi-lightning-fill"></i> À l'affiche</div>
+        <div class="banner-scroll-wrap">
+            <div class="banner-scroll">
+                @foreach($nowPlaying as $film)
+                <a href="{{ route('rechercherFilm') }}" class="banner-film-item">
+                    @if(isset($film['poster_path']) && $film['poster_path'])
+                        <img class="banner-film-poster" src="https://image.tmdb.org/t/p/w92{{ $film['poster_path'] }}" alt="" loading="lazy">
+                    @else
+                        <div class="banner-film-poster" style="display:flex;align-items:center;justify-content:center;"><i class="bi bi-film" style="font-size:12px;color:#333;"></i></div>
+                    @endif
+                    <div class="banner-film-info">
+                        <div class="banner-film-title">{{ $film['title'] ?? '' }}</div>
+                        <div class="banner-film-date">{{ isset($film['release_date']) && $film['release_date'] ? \Carbon\Carbon::parse($film['release_date'])->translatedFormat('d M Y') : '' }}</div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="page-content">
 
     {{-- TOP FILMS --}}
     @if(isset($topFilms) && count($topFilms) > 0)
     <div style="margin-bottom:48px;">
-        <div class="section-title"><i class="bi bi-graph-up-arrow" style="color:var(--red);font-style:normal;"></i> Top 10 cette semaine</div>
+        <div class="section-title"><i class="bi bi-graph-up-arrow" style="color:var(--red);"></i> Top 10 cette semaine</div>
         <div class="top-scroll-wrap">
             <div class="top-scroll">
                 @foreach($topFilms as $i => $film)
@@ -185,7 +287,7 @@
                         @if(isset($film['poster_path']) && $film['poster_path'])
                             <img src="https://image.tmdb.org/t/p/w342{{ $film['poster_path'] }}" alt="{{ $film['title'] ?? '' }}" loading="lazy">
                         @else
-                            <div style="width:100%;aspect-ratio:2/3;background:var(--bg-card-2);border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;"><i class="bi bi-film" style="font-size:28px;color:#222230;"></i></div>
+                            <div style="width:100%;aspect-ratio:2/3;background:var(--bg-card-2);border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;"><i class="bi bi-film" style="font-size:28px;color:#1e1e2e;"></i></div>
                         @endif
                         <span class="top-rank">#{{ $i + 1 }}</span>
                     </div>

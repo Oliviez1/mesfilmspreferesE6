@@ -19,13 +19,14 @@
             --border:     rgba(255,255,255,0.07);
             --border-2:   rgba(255,255,255,0.12);
             --text:       #e2e2ee;
-            --text-muted: #7070888;
+            --text-muted: #70708a;
             --text-dim:   #505068;
             --red:        #e50914;
             --red-hover:  #ff1420;
             --gold:       #f5c518;
             --radius:     10px;
             --nav-h:      60px;
+            --t:          0.12s;
         }
 
         html { scroll-behavior: smooth; }
@@ -44,7 +45,7 @@
         /* NAV */
         .navbar {
             height: var(--nav-h);
-            background: rgba(8,8,16,0.92);
+            background: rgba(8,8,16,0.94);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
@@ -61,14 +62,14 @@
             align-items: center;
             gap: 8px;
         }
-        .navbar-brand span { color: var(--red); }
+        .navbar-brand .brand-accent { color: var(--red); }
         .nav-link {
             color: #6a6a80 !important;
             font-size: 13.5px;
             font-weight: 500;
             padding: 6px 13px !important;
             border-radius: 7px;
-            transition: all 0.15s;
+            transition: color var(--t), background var(--t);
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -83,6 +84,7 @@
             padding: 6px 16px !important;
             font-weight: 600;
             font-size: 13.5px;
+            transition: background var(--t) !important;
         }
         .btn-nav-register:hover { background: var(--red-hover) !important; }
 
@@ -99,14 +101,14 @@
             border-radius: var(--radius);
             overflow: hidden;
             border: 1px solid var(--border);
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            transition: transform var(--t), box-shadow var(--t), border-color var(--t);
             cursor: pointer;
             position: relative;
         }
         .movie-card:hover {
-            transform: translateY(-5px) scale(1.015);
-            box-shadow: 0 18px 48px rgba(0,0,0,0.65);
-            border-color: rgba(255,255,255,0.16);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            border-color: rgba(255,255,255,0.14);
         }
         .movie-card img { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; }
         .poster-placeholder {
@@ -114,7 +116,7 @@
             background: var(--bg-card-2);
             display:flex; align-items:center; justify-content:center;
         }
-        .poster-placeholder i { font-size:44px; color:rgba(255,255,255,0.12); }
+        .poster-placeholder i { font-size:44px; color:rgba(255,255,255,0.1); }
 
         /* BUTTONS */
         .btn-cine {
@@ -122,17 +124,17 @@
             background: var(--red); color: #fff; border: none;
             border-radius: 8px; padding: 10px 20px;
             font-size: 13.5px; font-weight: 600; cursor: pointer;
-            transition: background 0.15s, transform 0.12s;
+            transition: background var(--t), transform var(--t);
             text-decoration: none;
         }
         .btn-cine:hover { background: var(--red-hover); color: #fff; transform: translateY(-1px); }
         .btn-cine:active { transform: none; }
         .btn-cine-outline {
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.16);
             color: var(--text);
         }
-        .btn-cine-outline:hover { background: rgba(255,255,255,0.07); color: var(--text); border-color: rgba(255,255,255,0.35); }
+        .btn-cine-outline:hover { background: rgba(255,255,255,0.07); color: var(--text); border-color: rgba(255,255,255,0.3); }
         .btn-cine-ghost {
             background: rgba(255,255,255,0.06);
             border: 1px solid var(--border);
@@ -141,36 +143,41 @@
         .btn-cine-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
         .btn-cine-gold { background: var(--gold); color: #000; }
         .btn-cine-gold:hover { background: #ffd000; color: #000; }
-        .btn-cine-danger { background: rgba(229,9,20,0.12); border: 1px solid rgba(229,9,20,0.25); color: #ff6b6b; }
-        .btn-cine-danger:hover { background: rgba(229,9,20,0.22); color: #ff6b6b; }
+        .btn-cine-danger { background: rgba(229,9,20,0.1); border: 1px solid rgba(229,9,20,0.22); color: #ff6b6b; }
+        .btn-cine-danger:hover { background: rgba(229,9,20,0.2); color: #ff6b6b; }
 
-        /* INPUTS */
-        .cine-input {
+        /* INPUTS — uniformisés, JAMAIS de style Bootstrap natif */
+        .cine-input,
+        select.cine-input {
             background: var(--bg-card) !important;
             border: 1px solid var(--border-2) !important;
             border-radius: 9px !important;
             color: var(--text) !important;
             padding: 11px 16px !important;
             font-size: 14px !important;
-            transition: border-color 0.15s, box-shadow 0.15s;
+            transition: border-color var(--t), box-shadow var(--t);
             width: 100%;
             outline: none;
+            appearance: none;
+            -webkit-appearance: none;
         }
-        .cine-input:focus {
+        .cine-input:focus,
+        select.cine-input:focus {
             border-color: var(--red) !important;
             box-shadow: 0 0 0 3px rgba(229,9,20,0.12) !important;
             background: var(--bg-card-2) !important;
         }
         .cine-input::placeholder { color: #444458 !important; }
-        textarea.cine-input { padding: 12px 16px !important; }
+        textarea.cine-input { padding: 12px 16px !important; resize: vertical; }
+        select.cine-input option { background: #13131e; color: var(--text); }
 
         /* SECTION TITLE */
         .section-title {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.09em;
+            letter-spacing: 0.10em;
             text-transform: uppercase;
-            color: #4a4a60;
+            color: #50506a;
             margin-bottom: 18px;
             display: flex;
             align-items: center;
@@ -181,7 +188,7 @@
         /* BADGE */
         .badge-genre {
             display: inline-block;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.05);
             border: 1px solid var(--border);
             color: #8080a0;
             border-radius: 999px;
@@ -192,8 +199,8 @@
 
         /* ALERTS */
         .alert-success-dark {
-            background: rgba(16,185,129,0.09);
-            border: 1px solid rgba(16,185,129,0.22);
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.2);
             color: #34d399;
             border-radius: var(--radius);
             padding: 12px 16px;
@@ -203,8 +210,8 @@
             gap: 9px;
         }
         .alert-error-dark {
-            background: rgba(229,9,20,0.09);
-            border: 1px solid rgba(229,9,20,0.22);
+            background: rgba(229,9,20,0.08);
+            border: 1px solid rgba(229,9,20,0.2);
             color: #ff6b6b;
             border-radius: var(--radius);
             padding: 12px 16px;
@@ -215,9 +222,9 @@
         }
 
         /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #252535; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #252535; border-radius: 4px; }
 
         /* EMPTY STATE */
         .empty-state {
@@ -230,7 +237,7 @@
         .empty-state .empty-icon {
             width: 56px; height: 56px;
             border-radius: 14px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
             display: inline-flex; align-items: center; justify-content: center;
             font-size: 24px; color: #3a3a50;
@@ -238,6 +245,9 @@
         }
         .empty-state h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
         .empty-state p { color: #5a5a74; font-size: 14px; max-width: 320px; margin: 0 auto 24px; }
+
+        /* TRANSITION GLOBALE LIENS */
+        a, button { transition: color var(--t), background var(--t), border-color var(--t), box-shadow var(--t), transform var(--t); }
 
         @media (max-width: 768px) {
             .page-content { padding: 24px 14px 60px; }
@@ -250,8 +260,15 @@
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid" style="max-width:1260px;margin:0 auto;">
         <a class="navbar-brand" href="{{ route('accueil') }}">
-            <i class="bi bi-film"></i>
-            Mes Films <span>Préférés</span>
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-label="Logo" style="flex-shrink:0;">
+                <rect x="1" y="4" width="20" height="14" rx="3" stroke="#e50914" stroke-width="1.8"/>
+                <circle cx="11" cy="11" r="3.2" stroke="#e50914" stroke-width="1.6"/>
+                <line x1="1" y1="7.5" x2="4" y2="7.5" stroke="#e50914" stroke-width="1.6"/>
+                <line x1="1" y1="14.5" x2="4" y2="14.5" stroke="#e50914" stroke-width="1.6"/>
+                <line x1="18" y1="7.5" x2="21" y2="7.5" stroke="#e50914" stroke-width="1.6"/>
+                <line x1="18" y1="14.5" x2="21" y2="14.5" stroke="#e50914" stroke-width="1.6"/>
+            </svg>
+            Mes Films <span class="brand-accent">Préférés</span>
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style="color:#666;">
             <i class="bi bi-list" style="font-size:22px;"></i>
@@ -272,7 +289,7 @@
                     <li class="nav-item">
                         <form method="POST" action="{{ route('logout') }}" class="d-inline m-0">
                             @csrf
-                            <button class="nav-link border-0" type="submit" style="background:none;"><i class="bi bi-box-arrow-right"></i></button>
+                            <button class="nav-link border-0" type="submit" style="background:none;" title="Déconnexion"><i class="bi bi-box-arrow-right"></i></button>
                         </form>
                     </li>
                 @endguest
