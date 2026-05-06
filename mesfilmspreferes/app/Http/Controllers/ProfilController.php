@@ -14,26 +14,27 @@ class ProfilController extends Controller
 
         $user = Auth::user();
 
-        // Films sauvegardés
+        // Tous les films en liste
         $favoris = collect();
-        try { $favoris = \App\Models\Favori::where('user_id', $user->id)->orderByDesc('created_at')->get(); } catch (\Exception $e) {}
+        try {
+            $favoris = \App\Models\Favori::where('user_id', $user->id)
+                ->orderByDesc('created_at')
+                ->get();
+        } catch (\Exception $e) {}
 
-        // Films notés (ceux qui ont une note)
-        $favorisNotes = collect();
-        try { $favorisNotes = \App\Models\Favori::where('user_id', $user->id)->whereNotNull('note')->orderByDesc('created_at')->get(); } catch (\Exception $e) {}
-
-        $notesCount = $favorisNotes->count();
+        // Nombre de films avec une note
+        $notesCount = $favoris->filter(fn($f) => !is_null($f->note) && $f->note > 0)->count();
 
         // Nombre d'amis
         $amisCount = 0;
         try {
-            $amisCount = \App\Models\User::where(function($q) use ($user) {
-                $q->whereHas('amis', fn($q2) => $q2->where('ami_id', $user->id)->where('statut', 'accepte'))
-                  ->orWhereHas('demandesAmis', fn($q2) => $q2->where('user_id', $user->id)->where('statut', 'accepte'));
-            })->count();
+            $amisCount = \App\Models\FriendUser::where('user_id', $user->id)
+                ->orWhere('friend_id', $user->id)
+                ->distinct()
+                ->count();
         } catch (\Exception $e) {}
 
-        return view('profil', compact('favoris', 'favorisNotes', 'notesCount', 'amisCount'));
+        return view('profil', compact('favoris', 'notesCount', 'amisCount'));
     }
 
     public function update(Request $request)
@@ -63,6 +64,6 @@ class ProfilController extends Controller
         }
         $user->save();
 
-        return redirect()->route('profil.show')->with('success', 'Profil mis à jour.');
+        return redirect()->route('profil.show')->with('success', 'Profil mis a jour.');
     }
 }

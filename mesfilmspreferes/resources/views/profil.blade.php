@@ -45,7 +45,7 @@
 .field-group { margin-bottom: 14px; }
 .field-label { display: block; font-size: 11px; font-weight: 600; color: #40405a; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
 
-/* FILMS NOTES */
+/* GRILLE FILMS */
 .notes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
@@ -62,7 +62,8 @@
 .note-card img { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; }
 .note-card-body { padding: 8px 10px 10px; }
 .note-film-title { font-size: 12px; font-weight: 600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 5px; }
-.note-stars { display:flex; gap:2px; font-size:11px; color:var(--gold); margin-bottom:4px; }
+.note-stars { display:flex; gap:2px; font-size:12px; color:#f5c518; margin-bottom:3px; }
+.note-stars .empty { color:#2a2a3a; }
 .note-comment { font-size: 11px; color: #38384e; margin-top: 3px; line-height:1.4; font-style:italic; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 
 /* ONGLETS */
@@ -97,6 +98,8 @@
     <p style="font-size:12.5px;color:#38384e;">Gerez vos informations et consultez vos films</p>
 </div>
 
+@if(session('success'))<div style="background:rgba(100,200,100,0.08);border:1px solid rgba(100,200,100,0.2);border-radius:8px;padding:10px 14px;color:#6dca6d;font-size:13px;margin-bottom:20px;">{{ session('success') }}</div>@endif
+
 <div class="profil-grid">
 
     {{-- COLONNE GAUCHE --}}
@@ -109,15 +112,15 @@
             </div>
             <div class="profil-stats">
                 <div class="profil-stat">
-                    <div class="profil-stat-num">{{ isset($favoris) ? $favoris->count() : 0 }}</div>
+                    <div class="profil-stat-num">{{ $favoris->count() }}</div>
                     <div class="profil-stat-label">Films</div>
                 </div>
                 <div class="profil-stat">
-                    <div class="profil-stat-num">{{ isset($notesCount) ? $notesCount : 0 }}</div>
+                    <div class="profil-stat-num">{{ $notesCount }}</div>
                     <div class="profil-stat-label">Notes</div>
                 </div>
                 <div class="profil-stat">
-                    <div class="profil-stat-num">{{ isset($amisCount) ? $amisCount : 0 }}</div>
+                    <div class="profil-stat-num">{{ $amisCount }}</div>
                     <div class="profil-stat-label">Amis</div>
                 </div>
             </div>
@@ -127,7 +130,7 @@
             <div class="form-block">
                 <div class="section-title" style="margin-bottom:16px;">Modifier le profil</div>
                 @if($errors->any())
-                <div class="alert-error-dark" style="margin-bottom:14px;"><i class="bi bi-exclamation-circle"></i>
+                <div style="background:rgba(200,80,80,0.08);border:1px solid rgba(200,80,80,0.2);border-radius:8px;padding:10px 14px;color:#ca6d6d;font-size:12.5px;margin-bottom:14px;">
                     <ul style="margin:0;padding-left:16px;">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
                 </div>
                 @endif
@@ -150,7 +153,7 @@
                         <input type="email" name="email" class="cine-input" value="{{ auth()->user()->email }}" required>
                     </div>
                     <div class="field-group" style="margin-bottom:18px;">
-                        <label class="field-label">Nouveau mot de passe <span style="color:#28283a;font-weight:400;">(optionnel)</span></label>
+                        <label class="field-label">Nouveau mot de passe <span style="font-weight:400;">(optionnel)</span></label>
                         <input type="password" name="password" class="cine-input" placeholder="Laisser vide pour ne pas changer">
                     </div>
                     <button type="submit" class="btn-cine" style="width:100%;justify-content:center;"><i class="bi bi-check2"></i> Enregistrer</button>
@@ -162,14 +165,20 @@
     {{-- COLONNE DROITE --}}
     <div>
         <div class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('notes', this)"><i class="bi bi-star"></i> Films notes</button>
-            <button class="tab-btn" onclick="switchTab('liste', this)"><i class="bi bi-bookmark"></i> Ma liste</button>
+            <button class="tab-btn active" onclick="switchTab('notes', this)">
+                <i class="bi bi-star-fill" style="color:#f5c518;font-size:11px;"></i> Films notes
+                <span style="font-size:11px;color:#38384e;">({{ $notesCount }})</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('liste', this)">
+                <i class="bi bi-bookmark"></i> Ma liste
+                <span style="font-size:11px;color:#38384e;">({{ $favoris->count() }})</span>
+            </button>
         </div>
 
         {{-- ONGLET FILMS NOTES --}}
         <div class="tab-pane active" id="tab-notes">
             @php
-                $favorisNotesFiltres = isset($favorisNotes) ? $favorisNotes->filter(fn($f) => !is_null($f->note)) : collect();
+                $favorisNotesFiltres = $favoris->filter(fn($f) => !is_null($f->note) && $f->note > 0);
             @endphp
             @if($favorisNotesFiltres->count() > 0)
             <div class="notes-grid">
@@ -178,12 +187,14 @@
                     @if($f->film_poster_path)
                         <img src="https://image.tmdb.org/t/p/w185{{ $f->film_poster_path }}" alt="{{ $f->film_title }}" loading="lazy">
                     @else
-                        <div class="film-placeholder-dark"><i class="bi bi-film"></i></div>
+                        <div style="width:100%;aspect-ratio:2/3;background:#12121e;display:flex;align-items:center;justify-content:center;"><i class="bi bi-film" style="font-size:24px;color:rgba(255,255,255,0.05);"></i></div>
                     @endif
                     <div class="note-card-body">
-                        <div class="note-film-title">{{ $f->film_title }}</div>
+                        <div class="note-film-title" title="{{ $f->film_title }}">{{ $f->film_title }}</div>
                         <div class="note-stars">
-                            @for($s=1;$s<=5;$s++)<i class="bi bi-star{{ $s <= $f->note ? '-fill' : '' }}"></i>@endfor
+                            @for($s=1;$s<=5;$s++)
+                                <i class="bi bi-star{{ $s <= $f->note ? '-fill' : '' }}{{ $s > $f->note ? ' empty' : '' }}"></i>
+                            @endfor
                         </div>
                         @if($f->avis)<div class="note-comment">{{ $f->avis }}</div>@endif
                     </div>
@@ -194,29 +205,31 @@
             <div class="empty-state" style="padding:48px 24px;">
                 <div class="empty-icon"><i class="bi bi-star"></i></div>
                 <h3>Aucune note</h3>
-                <p>Notez des films depuis la page Decouvrir pour les voir ici.</p>
-                <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-compass"></i> Decouvrir</a>
+                <p>Notez vos films depuis la page Ma liste.</p>
+                <a href="{{ route('favoris') }}" class="btn-cine"><i class="bi bi-bookmark"></i> Ma liste</a>
             </div>
             @endif
         </div>
 
         {{-- ONGLET MA LISTE --}}
         <div class="tab-pane" id="tab-liste">
-            @if(isset($favoris) && $favoris->count() > 0)
+            @if($favoris->count() > 0)
             <div class="notes-grid">
                 @foreach($favoris as $f)
                 <div class="note-card">
                     @if($f->film_poster_path)
                         <img src="https://image.tmdb.org/t/p/w185{{ $f->film_poster_path }}" alt="{{ $f->film_title }}" loading="lazy">
                     @else
-                        <div class="film-placeholder-dark"><i class="bi bi-film"></i></div>
+                        <div style="width:100%;aspect-ratio:2/3;background:#12121e;display:flex;align-items:center;justify-content:center;"><i class="bi bi-film" style="font-size:24px;color:rgba(255,255,255,0.05);"></i></div>
                     @endif
                     <div class="note-card-body">
-                        <div class="note-film-title">{{ $f->film_title }}</div>
+                        <div class="note-film-title" title="{{ $f->film_title }}">{{ $f->film_title }}</div>
                         @if($f->film_year)<div style="font-size:10.5px;color:#30303e;margin-bottom:4px;">{{ $f->film_year }}</div>@endif
-                        @if(isset($f->note) && $f->note)
+                        @if($f->note)
                         <div class="note-stars">
-                            @for($s=1;$s<=5;$s++)<i class="bi bi-star{{ $s <= $f->note ? '-fill' : '' }}"></i>@endfor
+                            @for($s=1;$s<=5;$s++)
+                                <i class="bi bi-star{{ $s <= $f->note ? '-fill' : '' }}{{ $s > $f->note ? ' empty' : '' }}"></i>
+                            @endfor
                         </div>
                         @endif
                     </div>
@@ -232,9 +245,7 @@
             </div>
             @endif
         </div>
-
     </div>
-
 </div>
 
 @else
