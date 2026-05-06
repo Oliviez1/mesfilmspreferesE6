@@ -1,60 +1,94 @@
 @extends('layouts.app')
-
 @section('title', 'Partages')
-
+@section('styles')
+<style>
+.partages-list { display: flex; flex-direction: column; gap: 12px; }
+.partage-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    transition: border-color 0.15s;
+}
+.partage-card:hover { border-color: var(--border-2); }
+.partage-poster {
+    flex-shrink: 0;
+    width: 72px; height: 108px;
+    border-radius: 7px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    background: var(--bg-card-2);
+}
+.partage-poster-ph {
+    flex-shrink: 0;
+    width: 72px; height: 108px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--bg-card-2);
+    display: flex; align-items: center; justify-content: center;
+    color: #222230; font-size: 24px;
+}
+.partage-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.partage-from { font-size: 12px; color: #4a4a60; margin-bottom: 10px; }
+.partage-msg {
+    font-size: 13px; color: #606075;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-style: italic;
+    margin-bottom: 10px;
+    max-width: 400px;
+}
+</style>
+@endsection
 @section('content')
-<div class="container">
-    <h1 style="margin-bottom: 32px;">Partages</h1>
-    
+<div class="page-content">
+    <div style="margin-bottom:32px;">
+        <h1 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;">Partages</h1>
+        <p style="font-size:13px;color:#4a4a60;">Films partagés par vos amis</p>
+    </div>
+
     @if(isset($partages) && $partages->count() > 0)
-        <div class="row g-4">
-            @foreach($partages as $partage)
-            <div class="col-md-6">
-                <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-                    <div style="display: flex; align-items: start; margin-bottom: 16px;">
-                        @if($partage->film_poster_path)
-                            <img src="https://image.tmdb.org/t/p/w200{{ $partage->film_poster_path }}" alt="{{ $partage->film_title }}" style="width: 80px; height: 120px; object-fit: cover; border-radius: 8px; margin-right: 16px;">
-                        @else
-                            <div style="width: 80px; height: 120px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
-                                <i class="bi bi-film" style="font-size: 32px; color: white; opacity: 0.5;"></i>
-                            </div>
-                        @endif
-                        <div style="flex: 1;">
-                            <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #1d1d1f;">{{ $partage->film_title }}</h3>
-                            <p style="color: #86868b; font-size: 15px; margin-bottom: 12px;">
-                                <i class="bi bi-person me-1"></i>Partagé par {{ $partage->user->username ?? 'Utilisateur' }}
-                            </p>
-                            @if($partage->message)
-                                <p style="color: #1d1d1f; font-size: 15px; line-height: 1.5; margin-bottom: 12px;">{{ $partage->message }}</p>
-                            @endif
-                            @if($partage->avis)
-                                <div style="background: #f5f5f7; border-radius: 8px; padding: 12px; margin-top: 12px;">
-                                    <p style="color: #1d1d1f; font-size: 15px; margin: 0; font-style: italic;">"{{ $partage->avis }}"</p>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                    @if(auth()->id() == $partage->user_id)
-                        <form action="{{ route('partages.destroy', $partage->id) }}" method="POST">
-                            @csrf
-                            @method('POST')
-                            <button type="submit" class="btn" style="width: 100%; background: #f5f5f7; color: #1d1d1f; border: none; border-radius: 8px; padding: 8px;">
-                                <i class="bi bi-trash me-1"></i>Supprimer
-                            </button>
-                        </form>
-                    @endif
+    <div class="partages-list">
+        @foreach($partages as $partage)
+        <div class="partage-card">
+            @if($partage->film_poster_path)
+                <img src="https://image.tmdb.org/t/p/w185{{ $partage->film_poster_path }}" alt="{{ $partage->film_title }}" class="partage-poster" loading="lazy">
+            @else
+                <div class="partage-poster-ph"><i class="bi bi-film"></i></div>
+            @endif
+            <div style="flex:1;">
+                <div class="partage-title">{{ $partage->film_title }}</div>
+                <div class="partage-from">
+                    <i class="bi bi-person"></i>
+                    Partagé par <strong>{{ $partage->user->username ?? 'Utilisateur' }}</strong>
+                    @if($partage->film_year) &middot; {{ $partage->film_year }} @endif
                 </div>
+                @if($partage->message)<div class="partage-msg">{{ $partage->message }}</div>@endif
+                @if($partage->avis)<div class="partage-msg">{{ $partage->avis }}</div>@endif
+                @if(auth()->id() == $partage->user_id)
+                <form action="{{ route('partages.destroy', $partage->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn-cine btn-cine-danger" style="font-size:12px;padding:6px 14px;">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </button>
+                </form>
+                @endif
             </div>
-            @endforeach
         </div>
+        @endforeach
+    </div>
     @else
-        <div style="text-align: center; padding: 64px 32px; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 24px;">
-                <i class="bi bi-share" style="font-size: 40px; color: white;"></i>
-            </div>
-            <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">Aucun partage pour le moment</h2>
-            <p style="color: #86868b; font-size: 17px; margin-bottom: 32px;">Les films partagés par vos amis apparaîtront ici.</p>
-        </div>
+    <div class="empty-state">
+        <div class="empty-icon"><i class="bi bi-share"></i></div>
+        <h3>Aucun partage</h3>
+        <p>Les films partagés par vos amis apparaîtront ici.</p>
+        <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-search"></i> Explorer des films</a>
+    </div>
     @endif
 </div>
 @endsection
