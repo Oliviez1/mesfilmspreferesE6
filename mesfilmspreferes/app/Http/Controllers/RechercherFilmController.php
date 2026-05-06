@@ -3,85 +3,107 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class RechercherFilmController extends Controller
 {
-    private function getMoviesFromAPI($url)
+    private function tmdb(string $url): ?array
     {
         try {
-            $response = file_get_contents($url);
-            
-            if ($response === false) {
-                throw new \Exception('Erreur lors de la requête API');
-            }
-            
+            $ctx = stream_context_create(['http' => ['timeout' => 8]]);
+            $response = file_get_contents($url, false, $ctx);
+            if ($response === false) return null;
             $data = json_decode($response, true);
-            
-            if (isset($data['results'])) {
-                return $data['results'];
-            }
+            return $data ?? null;
         } catch (\Exception $e) {
             return null;
         }
-        
-        return null;
+    }
+
+    private function apiKey(): string
+    {
+        return env('TMDB_API_KEY', '63905b28b94957ba2d061a85b849243f');
+    }
+
+    /**
+     * Enrichit chaque film avec credits (acteurs) depuis TMDB.
+     * On fait un appel /movie/{id} avec append_to_response=credits.
+     */
+    private function enrichMovies(array $movies): array
+    {
+        $key = $this->apiKey();
+        return array_map(function($film) use ($key) {
+            $id = $film['id'] ?? null;
+            if (!$id) return $film;
+            $detail = $this->tmdb("https://api.themoviedb.org/3/movie/{$id}?api_key={$key}&language=fr-FR&append_to_response=credits");
+            if ($detail) {
+                $film['runtime']  = $detail['runtime'] ?? null;
+                $film['genres']   = $detail['genres'] ?? [];
+                $film['credits']  = $detail['credits'] ?? [];
+            }
+            return $film;
+        }, $movies);
     }
 
     public function create()
     {
-        $results = null;
-        $apiKey = env('TMDB_API_KEY', '63905b28b94957ba2d061a85b849243f');
-        
-        // Afficher les films populaires par défaut
-        $url = "https://api.themoviedb.org/3/movie/popular?api_key={$apiKey}&language=fr-FR";
-        $results = $this->getMoviesFromAPI($url);
-        
-        return view('rechercher-film', compact('results'));
+        $key     = $this->apiKey();
+        $url     = "https://api.themoviedb.org/3/movie/popular?api_key={$key}&language=fr-FR";
+        $data    = $this->tmdb($url);
+        $results = $data['results'] ?? [];
+        $results = $this->enrichMovies($results);
+
+        $amis = $this->getAmis();
+        return view('rechercher-film', compact('results', 'amis'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'query' => 'required|string|min:2',
-        ]);
-
+        $key     = $this->apiKey();
+        $query   = $request->input('query');
+        $genreId = $request->input('genre_id');
         $results = null;
-        $error = null;
-        $apiKey = env('TMDB_API_KEY', '63905b28b94957ba2d061a85b849243f');
+        $error   = null;
 
-        $queryValue = $request->input('query');
-        
-        if ($queryValue) {
-            try {
-                $query = urlencode($queryValue);
-                
-                // On forme l'URL de la requête à l'API
-                $url = "https://api.themoviedb.org/3/search/movie?query={$query}&api_key={$apiKey}&language=fr-FR";
-                
-                // On récupère les données
-                $response = file_get_contents($url);
-                
-                if ($response === false) {
-                    throw new \Exception('Erreur lors de la requête API');
-                }
-                
-                // On met les données dans un tableau associatif qu'on peut exploiter
-                $data = json_decode($response, true);
-                
-                if (isset($data['results'])) {
-                    $results = $data['results'];
-                } else {
-                    $error = 'Aucun film trouvé.';
-                }
-            } catch (\Exception $e) {
-                $error = $e->getMessage();
+        try {
+            if ($query) {
+                $q    = urlencode($query);
+                $url  = "https://api.themoviedb.org/3/search/movie?query={$q}&api_key={$key}&language=fr-FR";
+                $data = $this->tmdb($url);
+                $results = $data['results'] ?? [];
+            } elseif ($genreId) {
+                $url  = "https://api.themoviedb.org/3/discover/movie?with_genres={$genreId}&api_key={$key}&language=fr-FR&sort_by=popularity.desc";
+                $data = $this->tmdb($url);
+                $results = $data['results'] ?? [];
+            } else {
+                $url  = "https://api.themoviedb.org/3/movie/popular?api_key={$key}&language=fr-FR";
+                $data = $this->tmdb($url);
+                $results = $data['results'] ?? [];
             }
-        } else {
-            // Si pas de recherche, afficher les films populaires
-            $url = "https://api.themoviedb.org/3/movie/popular?api_key={$apiKey}&language=fr-FR";
-            $results = $this->getMoviesFromAPI($url);
+
+            if ($results !== null) {
+                $results = $this->enrichMovies($results);
+            }
+        } catch (\Exception $e) {
+            $error = 'Erreur lors de la connexion à l\'API TMDB.';
         }
 
-        return view('rechercher-film', compact('results', 'error'));
+        $amis = $this->getAmis();
+        return view('rechercher-film', compact('results', 'error', 'amis'));
+    }
+
+    private function getAmis(): array
+    {
+        if (!Auth::check()) return [];
+        try {
+            return \App\Models\User::whereHas('amis', function($q) {
+                $q->where('ami_id', Auth::id())->where('statut', 'accepte');
+            })->orWhereHas('demandesAmis', function($q) {
+                $q->where('user_id', Auth::id())->where('statut', 'accepte');
+            })->get()->toArray();
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 }
