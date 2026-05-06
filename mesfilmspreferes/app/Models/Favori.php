@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Favori
- * 
+ *
  * @property int $id
  * @property string $favori_id
  * @property string $film_title
@@ -19,10 +19,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $film_overview
  * @property string|null $film_poster_path
  * @property string|null $avis
+ * @property int|null $note
  * @property int|null $user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property User|null $user
  *
  * @package App\Models
@@ -32,7 +33,8 @@ class Favori extends Model
 	protected $table = 'favoris';
 
 	protected $casts = [
-		'user_id' => 'int'
+		'user_id' => 'int',
+		'note'    => 'int',
 	];
 
 	protected $fillable = [
@@ -42,16 +44,12 @@ class Favori extends Model
 		'film_overview',
 		'film_poster_path',
 		'avis',
-		'user_id'
+		'note',
+		'user_id',
 	];
 
 	public function user()
 	{
 		return $this->belongsTo(User::class);
-	}
-
-	public function avis()
-	{
-		return $this->hasMany(Avi::class);
 	}
 }

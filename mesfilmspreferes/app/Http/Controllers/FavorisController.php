@@ -13,39 +13,38 @@ class FavorisController extends Controller
         $favoris = Favori::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
         return view('favoris', compact('favoris'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'film_id' => 'required',
-            'film_title' => 'required|string|max:255',
+            'film_id'          => 'required',
+            'film_title'       => 'required|string|max:255',
             'film_poster_path' => 'nullable|string',
-            'film_year' => 'nullable|string',
-            'film_overview' => 'nullable|string',
+            'film_year'        => 'nullable|string',
+            'film_overview'    => 'nullable|string',
         ]);
 
-        // Vérifier si le film n'est pas déjà en favoris
         $existing = Favori::where('user_id', Auth::id())
             ->where('favori_id', $request->film_id)
             ->first();
 
         if ($existing) {
-            return redirect()->route('favoris')->with('error', 'Ce film est déjà dans vos favoris.');
+            return redirect()->route('favoris')->with('error', 'Ce film est deja dans vos favoris.');
         }
 
         Favori::create([
-            'favori_id' => $request->film_id,
-            'film_title' => $request->film_title,
+            'favori_id'        => $request->film_id,
+            'film_title'       => $request->film_title,
             'film_poster_path' => $request->film_poster_path,
-            'film_year' => $request->film_year,
-            'film_overview' => $request->film_overview,
-            'user_id' => Auth::id(),
+            'film_year'        => $request->film_year,
+            'film_overview'    => $request->film_overview,
+            'user_id'          => Auth::id(),
         ]);
 
-        return redirect()->route('favoris')->with('success', 'Film ajouté aux favoris avec succès !');
+        return redirect()->route('favoris')->with('success', 'Film ajoute aux favoris.');
     }
 
     public function destroy($id)
@@ -56,12 +55,13 @@ class FavorisController extends Controller
 
         $favori->delete();
 
-        return redirect()->route('favoris')->with('success', 'Film retiré des favoris.');
+        return redirect()->route('favoris')->with('success', 'Film retire des favoris.');
     }
 
-    public function updateAvis(Request $request, $id)
+    public function updateNote(Request $request, $id)
     {
         $request->validate([
+            'note' => 'nullable|integer|min:1|max:5',
             'avis' => 'nullable|string|max:1000',
         ]);
 
@@ -70,9 +70,10 @@ class FavorisController extends Controller
             ->firstOrFail();
 
         $favori->update([
-            'avis' => $request->avis,
+            'note' => $request->note ?: null,
+            'avis' => $request->avis ?: null,
         ]);
 
-        return redirect()->route('favoris')->with('success', 'Avis mis à jour.');
+        return redirect()->route('favoris')->with('success', 'Note enregistree.');
     }
 }
