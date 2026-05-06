@@ -2,46 +2,36 @@
 @section('title', 'Partages')
 @section('styles')
 <style>
-.partages-list { display: flex; flex-direction: column; gap: 12px; }
+.partages-list { display: flex; flex-direction: column; gap: 10px; }
 .partage-card {
-    background: var(--bg-card);
+    background: #0d0d18;
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 20px;
-    display: flex;
-    gap: 18px;
-    align-items: flex-start;
+    border-radius: 12px; padding: 14px 18px;
+    display: flex; gap: 16px; align-items: flex-start;
     transition: border-color 0.15s;
 }
-.partage-card:hover { border-color: var(--border-2); }
+.partage-card:hover { border-color: rgba(255,255,255,0.1); }
 .partage-poster {
-    flex-shrink: 0;
-    width: 72px; height: 108px;
-    border-radius: 7px;
-    object-fit: cover;
+    flex-shrink: 0; width: 68px; height: 102px;
+    border-radius: 7px; object-fit: cover;
     border: 1px solid var(--border);
-    background: var(--bg-card-2);
+    background: #12121e;
 }
 .partage-poster-ph {
-    flex-shrink: 0;
-    width: 72px; height: 108px;
-    border-radius: 7px;
-    border: 1px solid var(--border);
-    background: var(--bg-card-2);
+    flex-shrink: 0; width: 68px; height: 102px;
+    border-radius: 7px; border: 1px solid var(--border);
+    background: #12121e;
     display: flex; align-items: center; justify-content: center;
-    color: #222230; font-size: 24px;
+    color: rgba(255,255,255,0.06); font-size: 22px;
 }
 .partage-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-.partage-from { font-size: 12px; color: #4a4a60; margin-bottom: 10px; }
+.partage-from { font-size: 12px; color: #38384e; margin-bottom: 10px; }
 .partage-msg {
-    font-size: 13px; color: #606075;
-    background: rgba(255,255,255,0.03);
+    font-size: 13px; color: #55556a;
+    background: rgba(255,255,255,0.025);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-style: italic;
-    margin-bottom: 10px;
-    max-width: 400px;
+    border-radius: 8px; padding: 8px 12px;
+    font-style: italic; margin-bottom: 10px; max-width: 400px;
 }
 </style>
 @endsection
@@ -49,7 +39,7 @@
 <div class="page-content">
     <div style="margin-bottom:32px;">
         <h1 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;">Partages</h1>
-        <p style="font-size:13px;color:#4a4a60;">Films partagés par vos amis</p>
+        <p style="font-size:13px;color:#38384e;">Films partages par vos amis</p>
     </div>
 
     @if(isset($partages) && $partages->count() > 0)
@@ -65,7 +55,7 @@
                 <div class="partage-title">{{ $partage->film_title }}</div>
                 <div class="partage-from">
                     <i class="bi bi-person"></i>
-                    Partagé par <strong>{{ $partage->user->username ?? 'Utilisateur' }}</strong>
+                    Partage par <strong>{{ $partage->user->username ?? 'Utilisateur' }}</strong>
                     @if($partage->film_year) &middot; {{ $partage->film_year }} @endif
                 </div>
                 @if($partage->message)<div class="partage-msg">{{ $partage->message }}</div>@endif
@@ -86,8 +76,8 @@
     <div class="empty-state">
         <div class="empty-icon"><i class="bi bi-share"></i></div>
         <h3>Aucun partage</h3>
-        <p>Les films partagés par vos amis apparaîtront ici.</p>
-        <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-search"></i> Explorer des films</a>
+        <p>Les films partages par vos amis apparaitront ici.</p>
+        <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-compass"></i> Explorer des films</a>
     </div>
     @endif
 </div>

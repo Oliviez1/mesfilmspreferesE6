@@ -45,14 +45,14 @@
         /* NAV */
         .navbar {
             height: var(--nav-h);
-            background: rgba(8,8,16,0.94);
+            background: rgba(8,8,16,0.96);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             padding: 0 28px;
         }
         .navbar-brand {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 800;
             letter-spacing: -0.01em;
             color: #fff !important;
@@ -60,33 +60,68 @@
             margin-right: 36px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 9px;
         }
         .navbar-brand .brand-accent { color: var(--red); }
+
+        /* NAV LINKS — style pill actif */
         .nav-link {
             color: #6a6a80 !important;
             font-size: 13.5px;
             font-weight: 500;
-            padding: 6px 13px !important;
-            border-radius: 7px;
+            padding: 7px 14px !important;
+            border-radius: 8px;
             transition: color var(--t), background var(--t);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
+            white-space: nowrap;
         }
-        .nav-link:hover, .nav-link.active { color: #fff !important; background: rgba(255,255,255,0.06); }
-        .nav-link i { font-size: 14px; }
+        .nav-link i { font-size: 13px; }
+        .nav-link:hover { color: #c0c0d8 !important; background: rgba(255,255,255,0.05); }
+        .nav-link.active { color: #fff !important; background: rgba(255,255,255,0.08); }
+
+        /* Boutons nav droite */
+        .btn-nav-login {
+            border: 1px solid rgba(255,255,255,0.13) !important;
+            color: #b0b0c8 !important;
+        }
+        .btn-nav-login:hover { border-color: rgba(255,255,255,0.28) !important; color: #fff !important; background: rgba(255,255,255,0.07) !important; }
         .btn-nav-register {
             background: var(--red) !important;
             color: #fff !important;
-            border-radius: 7px;
-            padding: 6px 16px !important;
+            border-radius: 8px;
+            padding: 7px 16px !important;
             font-weight: 600;
             font-size: 13.5px;
             transition: background var(--t) !important;
+            border: none !important;
         }
         .btn-nav-register:hover { background: var(--red-hover) !important; }
+
+        /* NAV TABS redesignés */
+        .nav-tabs-bar {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+        .nav-tab-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #60607a;
+            text-decoration: none;
+            transition: color var(--t), background var(--t);
+            position: relative;
+        }
+        .nav-tab-item:hover { color: #c0c0d8; background: rgba(255,255,255,0.05); }
+        .nav-tab-item.active { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-tab-item i { font-size: 13px; }
 
         /* LAYOUT */
         .page-content {
@@ -116,7 +151,16 @@
             background: var(--bg-card-2);
             display:flex; align-items:center; justify-content:center;
         }
-        .poster-placeholder i { font-size:44px; color:rgba(255,255,255,0.1); }
+        .poster-placeholder i { font-size:44px; color:rgba(255,255,255,0.06); }
+
+        /* POSTER PLACEHOLDER DARK */
+        .film-placeholder-dark {
+            width:100%; aspect-ratio:2/3;
+            background: #14141e;
+            display:flex; align-items:center; justify-content:center;
+            border-radius: inherit;
+        }
+        .film-placeholder-dark i { font-size:32px; color:rgba(255,255,255,0.07); }
 
         /* BUTTONS */
         .btn-cine {
@@ -146,7 +190,7 @@
         .btn-cine-danger { background: rgba(229,9,20,0.1); border: 1px solid rgba(229,9,20,0.22); color: #ff6b6b; }
         .btn-cine-danger:hover { background: rgba(229,9,20,0.2); color: #ff6b6b; }
 
-        /* INPUTS — uniformisés, JAMAIS de style Bootstrap natif */
+        /* INPUTS */
         .cine-input,
         select.cine-input {
             background: var(--bg-card) !important;
@@ -226,27 +270,26 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #252535; border-radius: 4px; }
 
-        /* EMPTY STATE */
+        /* EMPTY STATE — tout sombre, jamais de fond blanc */
         .empty-state {
             text-align: center;
             padding: 80px 32px;
             border: 1px solid var(--border);
             border-radius: 16px;
-            background: var(--bg-card);
+            background: #0d0d18;
         }
         .empty-state .empty-icon {
             width: 56px; height: 56px;
             border-radius: 14px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
             display: inline-flex; align-items: center; justify-content: center;
-            font-size: 24px; color: #3a3a50;
+            font-size: 22px; color: #35355a;
             margin-bottom: 20px;
         }
-        .empty-state h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-        .empty-state p { color: #5a5a74; font-size: 14px; max-width: 320px; margin: 0 auto 24px; }
+        .empty-state h3 { font-size: 17px; font-weight: 700; color: #c0c0d8; margin-bottom: 8px; }
+        .empty-state p { color: #45455e; font-size: 13.5px; max-width: 320px; margin: 0 auto 24px; }
 
-        /* TRANSITION GLOBALE LIENS */
         a, button { transition: color var(--t), background var(--t), border-color var(--t), box-shadow var(--t), transform var(--t); }
 
         @media (max-width: 768px) {
@@ -260,7 +303,7 @@
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid" style="max-width:1260px;margin:0 auto;">
         <a class="navbar-brand" href="{{ route('accueil') }}">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-label="Logo" style="flex-shrink:0;">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-label="Logo" style="flex-shrink:0;">
                 <rect x="1" y="4" width="20" height="14" rx="3" stroke="#e50914" stroke-width="1.8"/>
                 <circle cx="11" cy="11" r="3.2" stroke="#e50914" stroke-width="1.6"/>
                 <line x1="1" y1="7.5" x2="4" y2="7.5" stroke="#e50914" stroke-width="1.6"/>
@@ -270,30 +313,40 @@
             </svg>
             Mes Films <span class="brand-accent">Préférés</span>
         </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style="color:#666;">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style="color:#555;">
             <i class="bi bi-list" style="font-size:22px;"></i>
         </button>
         <div class="collapse navbar-collapse" id="nav">
-            <ul class="navbar-nav me-auto gap-1">
-                <li class="nav-item"><a class="nav-link" href="{{ route('rechercherFilm') }}"><i class="bi bi-search"></i> Découvrir</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('favoris') }}"><i class="bi bi-bookmark"></i> Ma liste</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('amis.index') }}"><i class="bi bi-people"></i> Amis</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('partages.index') }}"><i class="bi bi-share"></i> Partages</a></li>
-            </ul>
-            <ul class="navbar-nav gap-1 align-items-center">
+            <div class="nav-tabs-bar me-auto">
+                <a class="nav-tab-item {{ request()->routeIs('rechercherFilm') ? 'active' : '' }}" href="{{ route('rechercherFilm') }}">
+                    <i class="bi bi-compass"></i> Découvrir
+                </a>
+                <a class="nav-tab-item {{ request()->routeIs('favoris') ? 'active' : '' }}" href="{{ route('favoris') }}">
+                    <i class="bi bi-bookmark"></i> Ma liste
+                </a>
+                <a class="nav-tab-item {{ request()->routeIs('amis.index') ? 'active' : '' }}" href="{{ route('amis.index') }}">
+                    <i class="bi bi-people"></i> Amis
+                </a>
+                <a class="nav-tab-item {{ request()->routeIs('partages.index') ? 'active' : '' }}" href="{{ route('partages.index') }}">
+                    <i class="bi bi-share"></i> Partages
+                </a>
+            </div>
+            <div class="nav-tabs-bar gap-2">
                 @guest
-                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Connexion</a></li>
-                    <li class="nav-item"><a class="nav-link btn-nav-register" href="{{ route('creerCompte') }}">S'inscrire</a></li>
+                    <a class="nav-tab-item btn-nav-login" href="{{ route('login') }}">Connexion</a>
+                    <a class="nav-link btn-nav-register" href="{{ route('creerCompte') }}">S'inscrire</a>
                 @else
-                    <li class="nav-item"><a class="nav-link" href="{{ route('profil.show') }}"><i class="bi bi-person-circle"></i> {{ auth()->user()->username ?? auth()->user()->firstname }}</a></li>
-                    <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline m-0">
-                            @csrf
-                            <button class="nav-link border-0" type="submit" style="background:none;" title="Déconnexion"><i class="bi bi-box-arrow-right"></i></button>
-                        </form>
-                    </li>
+                    <a class="nav-tab-item {{ request()->routeIs('profil.show') ? 'active' : '' }}" href="{{ route('profil.show') }}">
+                        <i class="bi bi-person-circle"></i> {{ auth()->user()->username ?? auth()->user()->firstname }}
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline m-0">
+                        @csrf
+                        <button class="nav-tab-item" type="submit" title="Déconnexion" style="background:none;border:none;cursor:pointer;">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                    </form>
                 @endguest
-            </ul>
+            </div>
         </div>
     </div>
 </nav>

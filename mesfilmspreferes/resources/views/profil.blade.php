@@ -11,53 +11,48 @@
 @media(max-width:768px){ .profil-grid{ grid-template-columns:1fr; } }
 
 .profil-card {
-    background: var(--bg-card);
+    background: #0d0d18;
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
 }
 .profil-card-header {
-    background: linear-gradient(160deg, rgba(229,9,20,0.07) 0%, rgba(229,9,20,0.02) 100%);
+    background: linear-gradient(160deg, rgba(229,9,20,0.06) 0%, transparent 100%);
     border-bottom: 1px solid var(--border);
     padding: 28px 22px;
     text-align: center;
 }
 .profil-avatar {
     width: 68px; height: 68px;
-    background: rgba(229,9,20,0.1);
-    border: 1px solid rgba(229,9,20,0.2);
+    background: rgba(229,9,20,0.08);
+    border: 1px solid rgba(229,9,20,0.18);
     border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
-    font-size: 28px; color: var(--red); margin-bottom: 14px;
+    font-size: 26px; color: #cc3333; margin-bottom: 14px;
 }
 .profil-username { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 3px; }
-.profil-email { font-size: 12px; color: #38384e; }
-.profil-stats {
-    display: flex;
-    border-top: 1px solid var(--border);
-}
+.profil-email { font-size: 12px; color: #30304a; }
+.profil-stats { display: flex; border-top: 1px solid var(--border); }
 .profil-stat {
-    flex: 1;
-    padding: 15px 8px;
-    text-align: center;
+    flex: 1; padding: 15px 8px; text-align: center;
     border-right: 1px solid var(--border);
 }
 .profil-stat:last-child { border-right: none; }
 .profil-stat-num { font-size: 20px; font-weight: 800; color: #fff; line-height: 1; }
-.profil-stat-label { font-size: 10px; color: #34344a; text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
+.profil-stat-label { font-size: 10px; color: #2c2c42; text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
 
 .form-block { padding: 22px; }
 .field-group { margin-bottom: 14px; }
-.field-label { display: block; font-size: 11px; font-weight: 600; color: #44445c; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+.field-label { display: block; font-size: 11px; font-weight: 600; color: #40405a; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
 
-/* FILMS NOTÉS */
+/* FILMS NOTES */
 .notes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
     gap: 14px;
 }
 .note-card {
-    background: var(--bg-card);
+    background: #0d0d18;
     border: 1px solid var(--border);
     border-radius: 9px;
     overflow: hidden;
@@ -66,28 +61,26 @@
 .note-card:hover { border-color: var(--border-2); transform: translateY(-3px); }
 .note-card img { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; }
 .note-card-body { padding: 8px 10px 10px; }
-.note-film-title { font-size: 12px; font-weight: 600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 4px; }
-.note-stars { display:flex; gap:2px; font-size:11px; color:var(--gold); }
-.note-comment { font-size: 11px; color: #40405a; margin-top: 4px; line-height:1.4; font-style:italic; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.note-film-title { font-size: 12px; font-weight: 600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 5px; }
+.note-stars { display:flex; gap:2px; font-size:11px; color:var(--gold); margin-bottom:4px; }
+.note-comment { font-size: 11px; color: #38384e; margin-top: 3px; line-height:1.4; font-style:italic; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 
 /* ONGLETS */
 .tab-bar {
-    display: flex;
-    gap: 0;
+    display: flex; gap: 0;
     border-bottom: 1px solid var(--border);
     margin-bottom: 24px;
 }
 .tab-btn {
     padding: 10px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #50506a;
-    background: none;
-    border: none;
+    font-size: 13px; font-weight: 600;
+    color: #46466a;
+    background: none; border: none;
     border-bottom: 2px solid transparent;
     cursor: pointer;
     transition: color var(--t), border-color var(--t);
     margin-bottom: -1px;
+    display: flex; align-items: center; gap: 6px;
 }
 .tab-btn.active { color: #fff; border-bottom-color: var(--red); }
 .tab-btn:hover:not(.active) { color: var(--text); }
@@ -99,9 +92,9 @@
 <div class="page-content">
 @auth
 
-<div style="margin-bottom:26px;">
+<div style="margin-bottom:28px;">
     <h1 style="font-size:21px;font-weight:800;color:#fff;margin-bottom:4px;">Mon profil</h1>
-    <p style="font-size:12.5px;color:#404058;">Gérez vos informations et consultez vos films</p>
+    <p style="font-size:12.5px;color:#38384e;">Gerez vos informations et consultez vos films</p>
 </div>
 
 <div class="profil-grid">
@@ -141,7 +134,7 @@
                 <form action="{{ route('profil.update') }}" method="POST">
                     @csrf
                     <div class="field-group">
-                        <label class="field-label">Prénom</label>
+                        <label class="field-label">Prenom</label>
                         <input type="text" name="firstname" class="cine-input" value="{{ auth()->user()->firstname ?? '' }}" required>
                     </div>
                     <div class="field-group">
@@ -169,28 +162,29 @@
     {{-- COLONNE DROITE --}}
     <div>
         <div class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('notes', this)"><i class="bi bi-star" style="margin-right:5px;"></i> Films notés</button>
-            <button class="tab-btn" onclick="switchTab('liste', this)"><i class="bi bi-bookmark" style="margin-right:5px;"></i> Ma liste</button>
+            <button class="tab-btn active" onclick="switchTab('notes', this)"><i class="bi bi-star"></i> Films notes</button>
+            <button class="tab-btn" onclick="switchTab('liste', this)"><i class="bi bi-bookmark"></i> Ma liste</button>
         </div>
 
-        {{-- ONGLET FILMS NOTÉS --}}
+        {{-- ONGLET FILMS NOTES --}}
         <div class="tab-pane active" id="tab-notes">
-            @if(isset($favorisNotes) && $favorisNotes->count() > 0)
+            @php
+                $favorisNotesFiltres = isset($favorisNotes) ? $favorisNotes->filter(fn($f) => !is_null($f->note)) : collect();
+            @endphp
+            @if($favorisNotesFiltres->count() > 0)
             <div class="notes-grid">
-                @foreach($favorisNotes as $f)
+                @foreach($favorisNotesFiltres as $f)
                 <div class="note-card">
                     @if($f->film_poster_path)
                         <img src="https://image.tmdb.org/t/p/w185{{ $f->film_poster_path }}" alt="{{ $f->film_title }}" loading="lazy">
                     @else
-                        <div style="width:100%;aspect-ratio:2/3;background:var(--bg-card-2);display:flex;align-items:center;justify-content:center;"><i class="bi bi-film" style="font-size:24px;color:#1e1e2e;"></i></div>
+                        <div class="film-placeholder-dark"><i class="bi bi-film"></i></div>
                     @endif
                     <div class="note-card-body">
                         <div class="note-film-title">{{ $f->film_title }}</div>
-                        @if($f->note)
                         <div class="note-stars">
                             @for($s=1;$s<=5;$s++)<i class="bi bi-star{{ $s <= $f->note ? '-fill' : '' }}"></i>@endfor
                         </div>
-                        @endif
                         @if($f->avis)<div class="note-comment">{{ $f->avis }}</div>@endif
                     </div>
                 </div>
@@ -200,8 +194,8 @@
             <div class="empty-state" style="padding:48px 24px;">
                 <div class="empty-icon"><i class="bi bi-star"></i></div>
                 <h3>Aucune note</h3>
-                <p>Notez des films depuis la page Découvrir pour les voir ici.</p>
-                <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-search"></i> Découvrir</a>
+                <p>Notez des films depuis la page Decouvrir pour les voir ici.</p>
+                <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-compass"></i> Decouvrir</a>
             </div>
             @endif
         </div>
@@ -215,11 +209,11 @@
                     @if($f->film_poster_path)
                         <img src="https://image.tmdb.org/t/p/w185{{ $f->film_poster_path }}" alt="{{ $f->film_title }}" loading="lazy">
                     @else
-                        <div style="width:100%;aspect-ratio:2/3;background:var(--bg-card-2);display:flex;align-items:center;justify-content:center;"><i class="bi bi-film" style="font-size:24px;color:#1e1e2e;"></i></div>
+                        <div class="film-placeholder-dark"><i class="bi bi-film"></i></div>
                     @endif
                     <div class="note-card-body">
                         <div class="note-film-title">{{ $f->film_title }}</div>
-                        @if($f->film_year)<div style="font-size:10.5px;color:#38384e;margin-bottom:4px;">{{ $f->film_year }}</div>@endif
+                        @if($f->film_year)<div style="font-size:10.5px;color:#30303e;margin-bottom:4px;">{{ $f->film_year }}</div>@endif
                         @if(isset($f->note) && $f->note)
                         <div class="note-stars">
                             @for($s=1;$s<=5;$s++)<i class="bi bi-star{{ $s <= $f->note ? '-fill' : '' }}"></i>@endfor
@@ -233,8 +227,8 @@
             <div class="empty-state" style="padding:48px 24px;">
                 <div class="empty-icon"><i class="bi bi-bookmark"></i></div>
                 <h3>Liste vide</h3>
-                <p>Ajoutez des films à votre liste depuis la page Découvrir.</p>
-                <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-search"></i> Découvrir</a>
+                <p>Ajoutez des films a votre liste depuis la page Decouvrir.</p>
+                <a href="{{ route('rechercherFilm') }}" class="btn-cine"><i class="bi bi-compass"></i> Decouvrir</a>
             </div>
             @endif
         </div>
@@ -246,8 +240,8 @@
 @else
 <div class="empty-state" style="max-width:380px;margin:80px auto;">
     <div class="empty-icon"><i class="bi bi-person-lock"></i></div>
-    <h3>Accès restreint</h3>
-    <p>Connectez-vous pour accéder à votre profil.</p>
+    <h3>Acces restreint</h3>
+    <p>Connectez-vous pour acceder a votre profil.</p>
     <a href="{{ route('login') }}" class="btn-cine">Se connecter</a>
 </div>
 @endauth
