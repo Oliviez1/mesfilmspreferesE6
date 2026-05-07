@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class RechercherFilmController extends Controller
 {
@@ -94,12 +95,11 @@ class RechercherFilmController extends Controller
 
     /**
      * Récupère la liste des amis de l'utilisateur connecté.
-     * Utilise la table friend_user (user_id / friend_id) de façon bidirectionnelle,
-     * identique à AmisController::index().
+     * Retourne une collection vide si non connecté.
      */
-    private function getAmis(): \Illuminate\Database\Eloquent\Collection
+    private function getAmis(): EloquentCollection
     {
-        if (!Auth::check()) return collect();
+        if (!Auth::check()) return new EloquentCollection();
 
         $userId = Auth::id();
 
