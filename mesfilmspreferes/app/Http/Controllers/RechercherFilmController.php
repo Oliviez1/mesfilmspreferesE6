@@ -28,7 +28,6 @@ class RechercherFilmController extends Controller
 
     /**
      * Enrichit chaque film avec credits (acteurs) depuis TMDB.
-     * On fait un appel /movie/{id} avec append_to_response=credits.
      */
     private function enrichMovies(array $movies): array
     {
@@ -93,17 +92,28 @@ class RechercherFilmController extends Controller
         return view('rechercher-film', compact('results', 'error', 'amis'));
     }
 
-    private function getAmis(): array
+    /**
+     * Récupère la liste des amis de l'utilisateur connecté.
+     * Utilise la table friend_user (user_id / friend_id) de façon bidirectionnelle,
+     * identique à AmisController::index().
+     */
+    private function getAmis(): \Illuminate\Database\Eloquent\Collection
     {
-        if (!Auth::check()) return [];
-        try {
-            return \App\Models\User::whereHas('amis', function($q) {
-                $q->where('ami_id', Auth::id())->where('statut', 'accepte');
-            })->orWhereHas('demandesAmis', function($q) {
-                $q->where('user_id', Auth::id())->where('statut', 'accepte');
-            })->get()->toArray();
-        } catch (\Exception $e) {
-            return [];
-        }
+        if (!Auth::check()) return collect();
+
+        $userId = Auth::id();
+
+        return User::whereIn('id', function($query) use ($userId) {
+                $query->select('friend_id')
+                    ->from('friend_user')
+                    ->where('user_id', $userId);
+            })
+            ->orWhereIn('id', function($query) use ($userId) {
+                $query->select('user_id')
+                    ->from('friend_user')
+                    ->where('friend_id', $userId);
+            })
+            ->where('id', '!=', $userId)
+            ->get();
     }
 }
