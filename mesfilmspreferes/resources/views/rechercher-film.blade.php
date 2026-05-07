@@ -184,7 +184,6 @@
 }
 .share-friend-item:hover { border-color: rgba(229,9,20,0.35); }
 .share-friend-name { font-size: 13px; font-weight: 600; color: var(--text); }
-.share-friend-user { font-size: 11px; color: var(--text-muted); }
 </style>
 @endsection
 
@@ -351,7 +350,6 @@
                     <label class="share-friend-item" onclick="selectFriend({{ $ami->id }}, '{{ addslashes($ami->firstname . ' ' . $ami->lastname) }}')">
                         <div>
                             <div class="share-friend-name">{{ $ami->firstname }} {{ $ami->lastname }}</div>
-                            <div class="share-friend-user">@{{ $ami->username }}</div>
                         </div>
                     </label>
                     @endforeach

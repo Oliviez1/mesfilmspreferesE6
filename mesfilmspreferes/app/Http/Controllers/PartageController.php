@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partage;
-use App\Models\Favori;
 use App\Models\FriendUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,13 +13,11 @@ class PartageController extends Controller
     {
         $userId = Auth::id();
 
-        // Partages recus : partages dont je suis le destinataire (friend_id = moi)
         $partages = Partage::where('friend_id', $userId)
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Partages envoyes : partages que j'ai crees
         $partagesEnvoyes = Partage::where('user_id', $userId)
             ->with('user')
             ->orderBy('created_at', 'desc')
@@ -32,19 +29,16 @@ class PartageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'favori_id'  => 'required|exists:favoris,id',
-            'friend_id'  => 'required|exists:users,id',
+            'film_id'    => 'required',
+            'film_title' => 'required|string',
+            'receiver_id'=> 'required|exists:users,id',
             'message'    => 'nullable|string|max:500',
         ]);
 
-        $favori = Favori::where('id', $request->favori_id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
         $isFriend = FriendUser::where(function($q) use ($request) {
-            $q->where('user_id', Auth::id())->where('friend_id', $request->friend_id);
+            $q->where('user_id', Auth::id())->where('friend_id', $request->receiver_id);
         })->orWhere(function($q) use ($request) {
-            $q->where('user_id', $request->friend_id)->where('friend_id', Auth::id());
+            $q->where('user_id', $request->receiver_id)->where('friend_id', Auth::id());
         })->exists();
 
         if (!$isFriend) {
@@ -53,13 +47,12 @@ class PartageController extends Controller
 
         Partage::create([
             'user_id'          => Auth::id(),
-            'favori_id'        => $favori->id,
-            'film_title'       => $favori->film_title,
-            'film_poster_path' => $favori->film_poster_path,
-            'film_tmdb_id'     => $favori->favori_id,
-            'friend_id'        => $request->friend_id,
-            'message'          => $request->message,
-            'avis'             => $favori->avis,
+            'friend_id'        => $request->receiver_id,
+            'film_tmdb_id'     => $request->film_id,
+            'film_title'       => $request->film_title,
+            'film_poster_path' => $request->film_poster_path ?? null,
+            'message'          => $request->message ?? null,
+            'avis'             => null,
         ]);
 
         return redirect()->back()->with('success', 'Film partage avec succes !');
