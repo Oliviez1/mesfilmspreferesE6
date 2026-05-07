@@ -22,7 +22,7 @@
 .favori-year { font-size: 11.5px; color: #48485e; margin-bottom: 8px; }
 
 /* Etoiles interactives */
-.star-rating { display:flex; gap:3px; margin-bottom:8px; }
+.star-rating { display:flex; gap:3px; margin-bottom:8px; flex-direction: row-reverse; justify-content: flex-end; }
 .star-rating input[type=radio] { display:none; }
 .star-rating label {
     font-size: 18px;
@@ -31,13 +31,7 @@
     transition: color 0.1s;
     line-height:1;
 }
-.star-rating input[type=radio]:checked ~ label,
-.star-rating label:hover,
-.star-rating label:hover ~ label { color: #f5c518; }
-.star-rating:has(input:checked) label { color: #2e2e40; }
 .star-rating input[type=radio]:checked ~ label { color: #f5c518; }
-/* hover forward fix */
-.star-rating { flex-direction: row-reverse; justify-content: flex-end; }
 .star-rating label:hover, .star-rating label:hover ~ label { color: #f5c518; }
 
 /* Note affichee (lecture seule) */
@@ -45,7 +39,7 @@
 .note-display .empty { color: #2e2e40; }
 .favori-avis-text { font-size: 11.5px; color: #48485e; font-style:italic; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 
-/* Formulaire de note (modal inline) */
+/* Formulaire de note */
 .note-form-toggle { font-size:11px; color:#4a4a60; cursor:pointer; text-decoration:underline; margin-bottom:8px; display:block; }
 .note-form-toggle:hover { color:#7a7a9a; }
 .note-form { display:none; margin-bottom:10px; }
@@ -55,6 +49,7 @@
     background:#12121e; border:1px solid var(--border);
     border-radius:6px; color:var(--text); resize:none;
     margin-top:6px; margin-bottom:6px;
+    box-sizing: border-box;
 }
 .note-form textarea:focus { outline:none; border-color:#3a3a50; }
 </style>
@@ -97,12 +92,13 @@
                     @endfor
                 </div>
                 @endif
-                @if($favori->avis)<div class="favori-avis-text">{{ $favori->avis }}</div>@endif
+                @if($favori->avis)<div class="favori-avis-text">&laquo;&nbsp;{{ $favori->avis }}&nbsp;&raquo;</div>@endif
 
                 {{-- Toggle formulaire de note --}}
                 <span class="note-form-toggle" onclick="toggleNote('note-{{ $favori->id }}')">
-                    {{ $favori->note ? 'Modifier la note' : 'Ajouter une note' }}
+                    <i class="bi bi-pencil" style="font-size:10px;"></i> {{ $favori->note ? 'Modifier la note' : 'Ajouter une note' }}
                 </span>
+
                 <div class="note-form" id="note-{{ $favori->id }}">
                     <form action="{{ route('favoris.updateNote', $favori->id) }}" method="POST">
                         @csrf
@@ -113,7 +109,9 @@
                             @endfor
                         </div>
                         <textarea name="avis" rows="2" placeholder="Votre avis (optionnel)">{{ $favori->avis }}</textarea>
-                        <button type="submit" class="btn-cine" style="width:100%;justify-content:center;font-size:12px;padding:6px 0;">Enregistrer</button>
+                        <button type="submit" class="btn-cine" style="width:100%;justify-content:center;font-size:12px;padding:6px 0;">
+                            <i class="bi bi-check2"></i> Enregistrer
+                        </button>
                     </form>
                 </div>
 

@@ -44,7 +44,7 @@ class FavorisController extends Controller
             'user_id'          => Auth::id(),
         ]);
 
-        return redirect()->route('favoris')->with('success', 'Film ajoute aux favoris.');
+        return redirect()->route('favoris')->with('success', 'Film ajoute a la liste.');
     }
 
     public function destroy($id)
@@ -55,7 +55,7 @@ class FavorisController extends Controller
 
         $favori->delete();
 
-        return redirect()->route('favoris')->with('success', 'Film retire des favoris.');
+        return redirect()->route('favoris')->with('success', 'Film retire de la liste.');
     }
 
     public function updateNote(Request $request, $id)
@@ -69,11 +69,16 @@ class FavorisController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
+        // On garde l'ancienne note si aucune nouvelle etoile selectionnee
+        $note = $request->note ? (int) $request->note : $favori->note;
+        // On efface l'avis seulement si le champ est vide et qu'il n'y avait rien avant
+        $avis = ($request->filled('avis')) ? $request->avis : $favori->avis;
+
         $favori->update([
-            'note' => $request->note ?: null,
-            'avis' => $request->avis ?: null,
+            'note' => $note,
+            'avis' => $avis ?: null,
         ]);
 
-        return redirect()->route('favoris')->with('success', 'Note enregistree.');
+        return redirect()->route('favoris')->with('success', 'Note enregistree !');
     }
 }
